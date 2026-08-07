@@ -45,7 +45,20 @@ module.exports.getMyWorkouts = async (req, res) =>{
 }
 
 module.exports.updateWorkout = async (req, res) =>{
+    const workoutId = req.params.id;
+    const {name, duration} = req.body;
+
     try{
+        const response = await Workout.findByIdAndUpdate(workoutId, {
+            name: name,
+            duration: duration
+        }, {new: true});
+
+        if(!response){
+            return res.status(404).send({error: "Workout not found."})
+        }
+
+        return res.status(200).send({message: "Workout updated successfully", updatedWorkout: response})
 
     }catch(error){
         errorHandler(error, req, res);
@@ -53,7 +66,23 @@ module.exports.updateWorkout = async (req, res) =>{
 }
 
 module.exports.deleteWorkout = async (req, res) =>{
+    const workoutId = req.params.id;
+
     try{
+        const workoutResponse = await Workout.findById(workoutId);
+
+        if(!workoutResponse){
+            return res.status(404).send({error: "Workout not found"})
+        }
+
+        const response = await Workout.findByIdAndDelete(workoutId);
+
+        if(!response){
+            return res.status(400).send({error: "Error when deleting workout."})
+        }
+
+        return res.status(200).send({message: "Workout deleted successfully"})
+        
 
     }catch(error){
         errorHandler(error, req, res);
@@ -61,8 +90,25 @@ module.exports.deleteWorkout = async (req, res) =>{
 }
 
 module.exports.completeWorkoutStatus = async (req, res) =>{
+    const workoutId = req.params.id;
+    
     try{
+        const workoutResponse = await Workout.findById(workoutId)
 
+        if(!workoutResponse){
+            return res.status(404).send({error: "Workout not found."})
+        }        
+        
+        if (workoutResponse.status === "completed") {
+            return res.status(200).send({message: "Workout already completed", workout: workoutResponse});
+        }
+
+        workoutResponse.status = "completed";
+        const response = await workoutResponse.save();
+
+        if(response){
+            return res.status(200).send({message: "Workout status updated successfully", updatedWorkout: response})
+        }
     }catch(error){
         errorHandler(error, req, res);
     }

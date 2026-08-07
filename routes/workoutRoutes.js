@@ -8,10 +8,10 @@ router.post("/addWorkout", verify, workoutController.addWorkout);
 
 router.get("/getMyWorkouts", verify, workoutController.getMyWorkouts);
 
-router.patch("/updateWorkout", verify, workoutController.updateWorkout);
+router.patch("/updateWorkout/:id", verify, workoutController.updateWorkout);
 
-router.delete("/deleteWorkout", verify, workoutController.deleteWorkout);
+router.delete("/deleteWorkout/:id", verify, workoutController.deleteWorkout);
 
-router.patch("/completeWorkoutStatus", verify, workoutController.completeWorkoutStatus);
+router.patch("/completeWorkoutStatus/:id", verify, workoutController.completeWorkoutStatus);
 
 module.exports = router;
