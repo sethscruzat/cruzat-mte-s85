@@ -6,7 +6,7 @@ module.exports.createAccessToken = (user) => {
         email: user.email,
         isAdmin: user.isAdmin
     }
-    return jwt.sign(data, process.env.JWT_SECRET_KEY);
+    return jwt.sign(data, process.env.JWT_SECRET);
 }
 
 module.exports.verify = (req, res, next) => {
